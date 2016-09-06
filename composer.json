@@ -1,0 +1,27 @@
+{
+  "name": "goetas-webservices/soap-common",
+  "authors": [
+    {
+      "name": "Asmir Mustafic",
+      "email": "goetas@gmail.com"
+    }
+  ],
+  "require": {
+    "php": "^5.5|^7.0",
+    "psr/cache": "^1.0"
+  },
+  "require-dev": {
+    "cache/doctrine-adapter": "^0.5",
+    "phpunit/phpunit": "^4.8|^5.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "GoetasWebservices\\SoapServices\\SoapCommon\\": "src"
+    }
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "0.1-dev"
+    }
+  }
+}
