@@ -24,8 +24,6 @@ class MetadataTest extends \PHPUnit_Framework_TestCase
     public function assertExpectedServices(array $services)
     {
         $expected = require __DIR__ . '/../Fixtures/test.php';
-        var_dump($expected);
-        exit;
         return $this->assertEquals($expected, $services);
     }
 
