@@ -8,7 +8,13 @@
   ],
   "require": {
     "php": "^5.5|^7.0",
-    "psr/cache": "^1.0"
+    "psr/cache": "^1.0",
+    "doctrine/instantiator": "^1.0.3",
+    "doctrine/common": "^2.0",
+    "jms/serializer": "^1.2",
+    "goetas-webservices/xsd2php-runtime": "^0.2",
+    "goetas-webservices/soap-reader": "^0.3",
+    "goetas-webservices/wsdl-reader": "^0.3"
   },
   "require-dev": {
     "cache/doctrine-adapter": "^0.5",
@@ -17,6 +23,11 @@
   "autoload": {
     "psr-4": {
       "GoetasWebservices\\SoapServices\\SoapCommon\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "GoetasWebservices\\SoapServices\\SoapCommon\\Tests\\": "tests"
     }
   },
   "extra": {

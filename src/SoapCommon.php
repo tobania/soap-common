@@ -2,11 +2,6 @@
 namespace GoetasWebservices\SoapServices\SoapCommon;
 
 use Doctrine\Instantiator\Instantiator;
-use GoetasWebservices\SoapServices\Faults\MustUnderstandException;
-use GoetasWebservices\SoapServices\Faults\ServerException;
-use GoetasWebservices\SoapServices\Faults\SoapServerException;
-use GoetasWebservices\SoapServices\Serializer\Handler\HeaderHandlerInterface;
-use GoetasWebservices\SoapServices\SoapEnvelope;
 use JMS\Serializer\Metadata\ClassMetadata;
 use JMS\Serializer\Metadata\PropertyMetadata;
 use JMS\Serializer\Serializer;
