@@ -12,7 +12,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class PhpMetadataGenerator implements PhpMetadataGeneratorInterface
 {
-    protected $namespaces;
+    protected $namespaces = [];
 
     private $baseNs = [
         'headers' => '\\SoapEnvelope\\Headers',
@@ -20,13 +20,14 @@ class PhpMetadataGenerator implements PhpMetadataGeneratorInterface
         'messages' => '\\SoapEnvelope\\Messages',
     ];
 
-    public function __construct(array $baseNs = array())
+    public function __construct(array $namespaces = array(), array $baseNs = array())
     {
         foreach ($baseNs as $k => $ns) {
             if (isset($this->baseNs[$k])) {
                 $this->baseNs[$k] = $ns;
             }
         }
+        $this->namespaces = $namespaces;
     }
 
     public function addNamespace($ns, $phpNamespace)
@@ -91,6 +92,7 @@ class PhpMetadataGenerator implements PhpMetadataGeneratorInterface
 
         foreach ($soapOperation->getFaults() as $fault) {
             //$operation['fault'][$fault->getName()] = $fault->get;
+            // @todo do faults metadata
         }
 
         return $operation;
@@ -98,12 +100,17 @@ class PhpMetadataGenerator implements PhpMetadataGeneratorInterface
 
     protected function generateInOut(Operation $operation, OperationMessage $operationMessage, Param $param, $direction)
     {
+        $xmlNs = $operation->getOperation()->getDefinition()->getTargetNamespace();
+        if (!isset($this->namespaces[$xmlNs])) {
+            throw new \Exception("Can not find a PHP namespace to be associated with '$xmlNs' XML namespace");
+        }
+        $ns = $this->namespaces[$xmlNs];
         $operation = [
-            'message_fqcn' => $this->namespaces[$operation->getOperation()->getDefinition()->getTargetNamespace()]
+            'message_fqcn' => $ns
                 . $this->baseNs['messages'] . '\\'
                 . Inflector::classify($operationMessage->getMessage()->getOperation()->getName())
                 . $direction,
-            'part_fqcn' => $this->namespaces[$operation->getOperation()->getDefinition()->getTargetNamespace()]
+            'part_fqcn' => $ns
                 . $this->baseNs['parts'] . '\\'
                 . Inflector::classify($operationMessage->getMessage()->getOperation()->getName())
                 . $direction,

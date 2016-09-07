@@ -12,7 +12,7 @@ class MetadataTest extends \PHPUnit_Framework_TestCase
     protected $metadataGenerator;
     public function setUp()
     {
-        $this->metadataGenerator = new PhpMetadataGenerator();
+        $this->metadataGenerator = new PhpMetadataGenerator(['http://www.example.org/test/' => '']);
     }
     public function testBuildServer()
     {

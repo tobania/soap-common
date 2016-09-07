@@ -10,7 +10,7 @@
     "php": "^5.5|^7.0",
     "psr/cache": "^1.0",
     "doctrine/instantiator": "^1.0.3",
-    "doctrine/common": "^2.0",
+    "doctrine/inflector": "^1.0",
     "jms/serializer": "^1.2",
     "goetas-webservices/xsd2php-runtime": "^0.2",
     "goetas-webservices/soap-reader": "^0.3",
