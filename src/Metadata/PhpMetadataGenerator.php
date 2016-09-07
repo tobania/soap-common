@@ -14,6 +14,21 @@ class PhpMetadataGenerator implements PhpMetadataGeneratorInterface
 {
     protected $namespaces;
 
+    private $baseNs = [
+        'headers' => '\\SoapEnvelope\\Headers',
+        'parts' => '\\SoapEnvelope\\Parts',
+        'messages' => '\\SoapEnvelope\\Messages',
+    ];
+
+    public function __construct(array $baseNs = array())
+    {
+        foreach ($baseNs as $k => $ns) {
+            if (isset($this->baseNs[$k])) {
+                $this->baseNs[$k] = $ns;
+            }
+        }
+    }
+
     public function addNamespace($ns, $phpNamespace)
     {
         $this->namespaces[$ns] = $phpNamespace;
@@ -85,11 +100,11 @@ class PhpMetadataGenerator implements PhpMetadataGeneratorInterface
     {
         $operation = [
             'message_fqcn' => $this->namespaces[$operation->getOperation()->getDefinition()->getTargetNamespace()]
-                . '\\SoapEnvelope\\Messages\\'
+                . $this->baseNs['messages'] . '\\'
                 . Inflector::classify($operationMessage->getMessage()->getOperation()->getName())
                 . $direction,
             'part_fqcn' => $this->namespaces[$operation->getOperation()->getDefinition()->getTargetNamespace()]
-                . '\\SoapEnvelope\\Parts\\'
+                . $this->baseNs['parts'] . '\\'
                 . Inflector::classify($operationMessage->getMessage()->getOperation()->getName())
                 . $direction,
             'parts' => array_keys($param->getMessage()->getParts())

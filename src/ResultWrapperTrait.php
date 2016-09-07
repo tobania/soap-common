@@ -6,36 +6,20 @@ use JMS\Serializer\Metadata\ClassMetadata;
 use JMS\Serializer\Metadata\PropertyMetadata;
 use JMS\Serializer\Serializer;
 
-class SoapCommon
+trait ResultWrapperTrait
 {
     /**
-     * @var Serializer
+     * @param SerializerInterface $serializer
+     * @param object|null $input
+     * @param string $class
+     * @return object
+     * @throws \Exception
      */
-    protected $serializer;
-
-    /**
-     * @var array
-     */
-    protected $serviceDefinition;
-
-    public function __construct(array $serviceDefinition, Serializer $serializer)
-    {
-        $this->serializer = $serializer;
-        $this->serviceDefinition = $serviceDefinition;
-    }
-
-    protected function getXmlNamesDescription($object)
-    {
-        $factory = $this->serializer->getMetadataFactory();
-        $classMetadata = $factory->getMetadataForClass(get_class($object));
-        return "{{$classMetadata->xmlRootNamespace}}$classMetadata->xmlRootName";
-    }
-
-    protected function wrapResult($input, $class)
+    protected function wrapResult(Serializer $serializer, $input, $class)
     {
         if (!$input instanceof $class) {
             $instantiator = new Instantiator();
-            $factory = $this->serializer->getMetadataFactory();
+            $factory = $serializer->getMetadataFactory();
             $previous = null;
             $previousProperty = null;
             $nextClass = $class;
