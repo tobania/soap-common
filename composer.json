@@ -9,7 +9,6 @@
   "require": {
     "php": "^5.5|^7.0",
     "doctrine/instantiator": "^1.0.3",
-    "doctrine/inflector": "^1.0",
     "jms/serializer": "^1.2",
     "goetas-webservices/xsd2php-runtime": "^0.2"
   },
