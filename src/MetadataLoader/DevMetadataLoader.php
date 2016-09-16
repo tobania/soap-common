@@ -1,24 +1,22 @@
 <?php
-namespace GoetasWebservices\SoapServices\SoapCommon\Metadata;
+namespace GoetasWebservices\SoapServices\SoapCommon\MetadataLoader;
 
-use GoetasWebservices\WsdlToPhp\Metadata\PhpMetadataGenerator;
+use GoetasWebservices\SoapServices\SoapCommon\Exception\MetadataException;
+use GoetasWebservices\SoapServices\SoapCommon\MetadataGenerator\MetadataGenerator;
 use GoetasWebservices\XML\SOAPReader\SoapReader;
 use GoetasWebservices\XML\WSDLReader\DefinitionsReader;
 
 /**
  * This class is here to be used only while developing, should not be used on production.
- *
- * Class DevMetadataReader
- * @package GoetasWebservices\SoapServices\SoapCommon\Metadata
  */
-class DevMetadataReader implements MetadataReaderInterface
+class DevMetadataLoader implements MetadataLoaderInterface
 {
     /**
      * @var array
      */
     private $metadataCache = [];
     /**
-     * @var PhpMetadataGenerator
+     * @var MetadataGenerator
      */
     private $metadataGenerator;
     /**
@@ -30,7 +28,7 @@ class DevMetadataReader implements MetadataReaderInterface
      */
     private $soapReader;
 
-    public function __construct(PhpMetadataGenerator $metadataGenerator, SoapReader $soapReader, DefinitionsReader $wsdlReader)
+    public function __construct(MetadataGenerator $metadataGenerator, SoapReader $soapReader, DefinitionsReader $wsdlReader)
     {
         $this->metadataGenerator = $metadataGenerator;
         $this->wsdlReader = $wsdlReader;
@@ -41,7 +39,11 @@ class DevMetadataReader implements MetadataReaderInterface
     {
         if (!isset($this->metadataCache[$wsdl])) {
             $this->wsdlReader->readFile($wsdl);
-            $this->metadataCache[$wsdl] = $this->metadataGenerator->generate($this->soapReader->getServices());
+            try {
+                $this->metadataCache[$wsdl] = $this->metadataGenerator->generate($this->soapReader->getServices());
+            } catch (\Exception $e) {
+                throw new MetadataException(sprintf("Can not generate metadata information for %s", $wsdl), 0, $e);
+            }
         }
 
         return $this->metadataCache[$wsdl];

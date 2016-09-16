@@ -14,11 +14,17 @@
     "goetas-webservices/soap-reader": "^0.3",
     "goetas-webservices/wsdl-reader": "^0.3",
     "jms/serializer": "^1.2",
-    "goetas-webservices/xsd2php-runtime": "^0.2"
+    "goetas-webservices/xsd2php-runtime": "^0.2",
+    "goetas-webservices/xsd2php": "^0.1@dev"
   },
   "autoload": {
     "psr-4": {
       "GoetasWebservices\\SoapServices\\SoapCommon\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "GoetasWebservices\\SoapServices\\SoapCommon\\Tests\\": "tests"
     }
   },
   "extra": {
