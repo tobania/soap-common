@@ -33,7 +33,7 @@ class MetadataGenerator implements MetadataGeneratorInterface
      * @param NamingStrategy $namingStrategy
      * @param array $namespaces
      */
-    public function __construct(NamingStrategy $namingStrategy, array $namespaces = array())
+    public function __construct(NamingStrategy $namingStrategy, array $namespaces)
     {
         $this->namespaces = $namespaces;
         $this->namingStrategy = $namingStrategy;
