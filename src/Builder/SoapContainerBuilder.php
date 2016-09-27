@@ -186,6 +186,8 @@ class SoapContainerBuilder
         foreach ($jmsMetadata as $php => $dir) {
             $serializerBuilder->addMetadataDir($dir, $php);
         }
+        // add SOAP Fault metadata info
+        $serializerBuilder->addMetadataDir(__DIR__. '/../Resources/metadata/jms', 'GoetasWebservices\SoapServices\SoapCommon\SoapEnvelope');
         return $serializerBuilder;
     }
 }
