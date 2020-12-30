@@ -1,0 +1,5 @@
+GoetasWebservices\SoapServices\Metadata\Arguments\Headers\Handler\HeaderPlaceholder:
+    properties:
+        __headers:
+            inline: true
+            type: array<GoetasWebservices\SoapServices\Metadata\Arguments\Headers\Header>
