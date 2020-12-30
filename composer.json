@@ -1,5 +1,6 @@
 {
   "name": "goetas-webservices/soap-common",
+  "license": "MIT",
   "authors": [
     {
       "name": "Asmir Mustafic",
