@@ -40,4 +40,4 @@ GoetasWebservices\SoapServices\Metadata\Envelope\SoapEnvelope\Parts\Fault:
             accessor:
                 getter: getRawDetail
                 setter: setRawDetail
-            type: GoetasWebservices\SoapServices\Metadata\Arguments\Headers\Handler\RawFaultDetail
+            type: GoetasWebservices\SoapServices\Metadata\Headers\RawFaultDetail

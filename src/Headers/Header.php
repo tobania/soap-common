@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace GoetasWebservices\SoapServices\Metadata\Arguments\Headers;
+namespace GoetasWebservices\SoapServices\Metadata\Headers;
 
 class Header
 {

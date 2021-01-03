@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace GoetasWebservices\SoapServices\Metadata\Arguments;
 
 use Doctrine\Instantiator\Instantiator;
-use GoetasWebservices\SoapServices\Metadata\Arguments\Headers\Header;
 use GoetasWebservices\SoapServices\Metadata\SerializerUtils;
 use JMS\Serializer\Accessor\DefaultAccessorStrategy;
 use JMS\Serializer\DeserializationContext;
@@ -30,21 +29,24 @@ class ArgumentsReader implements ArgumentsReaderInterface
      */
     public function readArguments(array $args, array $message): object
     {
-        $envelope = array_filter($args, static function ($item) use ($message) {
+        $envelopes = array_filter($args, static function ($item) use ($message) {
             return $item instanceof $message['message_fqcn'];
         });
-        if ($envelope) {
-            return reset($envelope);
+        if ($envelopes) {
+            $envelope = reset($envelopes);
+            $this->handleHeaders($args, $message, $envelope);
+
+            return $envelope;
         }
 
         $instantiator = new Instantiator();
         $envelope = $instantiator->instantiate($message['message_fqcn']);
+        $this->handleHeaders($args, $message, $envelope);
 
         if (!count($message['parts'])) {
             return $envelope;
         }
 
-        $args = $this->handleHeaders($args, $message, $envelope);
         if ($args[0] instanceof $message['part_fqcn']) {
             $envelope->setBody($args[0]);
 
@@ -99,40 +101,15 @@ class ArgumentsReader implements ArgumentsReaderInterface
     /**
      * @param array $args
      * @param array $message
-     *
-     * @return array
      */
-    private function handleHeaders(array $args, array $message, object $envelope): array
+    private function handleHeaders(array $args, array $message, object $envelope): void
     {
         $headers = array_filter($args, static function ($item) use ($message) {
             return $item instanceof $message['headers_fqcn'];
         });
-        if ($headers) {
+        if (count($headers)) {
             $envelope->setHeader(reset($headers));
-        } else {
-            $headers = array_filter($args, static function ($item) {
-                return $item instanceof Header;
-            });
-            if (count($headers)) {
-                $factory = SerializerUtils::getMetadataFactory($this->serializer);
-                $classMetadata = $factory->getMetadataForClass($message['message_fqcn']);
-                $propertyMetadata = $classMetadata->propertyMetadata['header'];
-
-                $instantiator = new Instantiator();
-                $header = $instantiator->instantiate($propertyMetadata->type['name']);
-                foreach ($headers as $headerInfo) {
-                    $header->addHeader($headerInfo);
-                }
-
-                $envelope->setHeader($header);
-            }
         }
-
-        $args = array_filter($args, static function ($item) use ($message) {
-            return !($item instanceof Header) && !($item instanceof $message['headers_fqcn']);
-        });
-
-        return $args;
     }
 
     /**
