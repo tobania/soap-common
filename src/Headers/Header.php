@@ -21,6 +21,14 @@ class Header
         $this->options = $options;
     }
 
+    public static function asMustUnderstand(object $data): Header
+    {
+        $header = new Header($data);
+        $header->mustUnderstand();
+
+        return $header;
+    }
+
     public function getData(): object
     {
         return $this->data;
