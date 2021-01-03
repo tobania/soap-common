@@ -168,6 +168,10 @@ class HeaderHandler implements SubscribingHandlerInterface, EventSubscriberInter
     public function serializeHeader(SerializationVisitorInterface $visitor, Header $header, array $type, SerializationContext $context): void
     {
         $data = $header->getData();
+        if ($data instanceof \DOMDocument) {
+            $data = $data->documentElement;
+        }
+
         if ($data instanceof \DOMElement) {
             $importedNode = $data->ownerDocument !== $visitor->getDocument()
                 ? $visitor->getDocument()->importNode($data, true)
