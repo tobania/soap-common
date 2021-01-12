@@ -15,8 +15,8 @@ use JMS\Serializer\GraphNavigator;
 use JMS\Serializer\Handler\SubscribingHandlerInterface;
 use JMS\Serializer\Metadata\StaticPropertyMetadata;
 use JMS\Serializer\SerializationContext;
-use JMS\Serializer\XmlDeserializationVisitor;
-use JMS\Serializer\XmlSerializationVisitor;
+use JMS\Serializer\Visitor\DeserializationVisitorInterface;
+use JMS\Serializer\Visitor\SerializationVisitorInterface;
 
 class HeaderHandler implements SubscribingHandlerInterface, EventSubscriberInterface
 {
@@ -89,7 +89,7 @@ class HeaderHandler implements SubscribingHandlerInterface, EventSubscriberInter
     /**
      * @return mixed
      */
-    public function deserializeHeaderPlaceholder(XmlDeserializationVisitor $visitor, \SimpleXMLElement $data, array $type, DeserializationContext $context)
+    public function deserializeHeaderPlaceholder(DeserializationVisitorInterface $visitor, \SimpleXMLElement $data, array $type, DeserializationContext $context)
     {
         $type = ['name' => $type['params'][0], 'params' => []];
         $headers = $context->getNavigator()->accept($data, $type, $context);
@@ -111,7 +111,7 @@ class HeaderHandler implements SubscribingHandlerInterface, EventSubscriberInter
     /**
      * @return mixed
      */
-    public function deserializeHeader(XmlDeserializationVisitor $visitor, \SimpleXMLElement $data, array $type, DeserializationContext $context)
+    public function deserializeHeader(DeserializationVisitorInterface $visitor, \SimpleXMLElement $data, array $type, DeserializationContext $context)
     {
         $type = ['name' => $type['params'][0], 'params' => []];
 
@@ -129,7 +129,7 @@ class HeaderHandler implements SubscribingHandlerInterface, EventSubscriberInter
         return $return;
     }
 
-    private function isMustUnderstand(\SimpleXMLElement $data, XmlDeserializationVisitor $visitor, DeserializationContext $context): bool
+    private function isMustUnderstand(\SimpleXMLElement $data, DeserializationVisitorInterface $visitor, DeserializationContext $context): bool
     {
         $domElement = dom_import_simplexml($data);
         $mustUnderstandAttr = $domElement->getAttributeNS($domElement->ownerDocument->documentElement->namespaceURI, 'mustUnderstand');
@@ -137,7 +137,7 @@ class HeaderHandler implements SubscribingHandlerInterface, EventSubscriberInter
         return !empty($mustUnderstandAttr) && $visitor->visitBoolean($mustUnderstandAttr, [], $context);
     }
 
-    public function serializeHeaderPlaceholder(XmlSerializationVisitor $visitor, object $data, array $type, SerializationContext $context): void
+    public function serializeHeaderPlaceholder(SerializationVisitorInterface $visitor, object $data, array $type, SerializationContext $context): void
     {
         // serialize default headers
         $context->stopVisiting($data);
@@ -165,7 +165,7 @@ class HeaderHandler implements SubscribingHandlerInterface, EventSubscriberInter
         }
     }
 
-    public function serializeHeader(XmlSerializationVisitor $visitor, Header $header, array $type, SerializationContext $context): void
+    public function serializeHeader(SerializationVisitorInterface $visitor, Header $header, array $type, SerializationContext $context): void
     {
         $data = $header->getData();
         if ($data instanceof \DOMElement) {
@@ -192,7 +192,7 @@ class HeaderHandler implements SubscribingHandlerInterface, EventSubscriberInter
         }
     }
 
-    private function handleOptions(XmlSerializationVisitor $visitor, array $options): void
+    private function handleOptions(SerializationVisitorInterface $visitor, array $options): void
     {
         if (!count($options)) {
             return;
@@ -221,7 +221,7 @@ class HeaderHandler implements SubscribingHandlerInterface, EventSubscriberInter
         $node->setAttributeNS($namespace, $prefix . ':' . $name, is_bool($value) || null === $value ? ($value ? 'true' : 'false') : $value);
     }
 
-    public function deserializeFaultDetail(XmlDeserializationVisitor $visitor, \SimpleXMLElement $data, array $type, DeserializationContext $context): \SimpleXMLElement
+    public function deserializeFaultDetail(DeserializationVisitorInterface $visitor, \SimpleXMLElement $data, array $type, DeserializationContext $context): \SimpleXMLElement
     {
         return $data->children();
     }
