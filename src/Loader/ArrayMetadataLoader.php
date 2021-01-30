@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace GoetasWebservices\SoapServices\Metadata\Loader;
 
-use GoetasWebservices\SoapServices\Exception\MetadataException;
+use GoetasWebservices\SoapServices\Metadata\Exception\MetadataException;
 
 class ArrayMetadataLoader implements MetadataLoaderInterface
 {
